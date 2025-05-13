@@ -35,7 +35,8 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::get('/create-student', [EleveController::class, 'index']);
 Route::post('/create-student', [EleveController::class, 'store']);
 Route::get('/student/{id}', [EleveController::class, 'show']);
-Route::delete('/delete-school/{id}', [EleveController::class, 'Delete']);
+Route::delete('/delete-student/{id}', [EleveController::class, 'Delete']);
+Route::put('/archive-student/{id}', [EleveController::class, 'archive']);
 Route::put('/update-student/{id}', [EleveController::class, 'update']);
 
 Route::get('/create-school', [EcoleController::class, 'index']);
@@ -103,7 +104,7 @@ Route::post('/notes', [NoteController::class, 'store']);
 Route::put('/notes/{id}', [NoteController::class, 'update']);
 Route::delete('/notes/{id}', [NoteController::class, 'destroy']);
 
- 
+
 Route::get('/school-year', [AnneeController::class, 'index']);
 // Route::get('/school-year/{id}', [NoteController::class, 'show']);
 Route::post('/school-year', [AnneeController::class, 'store']);

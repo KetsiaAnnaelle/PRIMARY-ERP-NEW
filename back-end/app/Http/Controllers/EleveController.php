@@ -16,32 +16,17 @@ class EleveController extends Controller
      */
 
 
-    public function index()
-    {
-        // $Eleves = Eleve::all();
+     public function index()
+     {
+         $eleves = Eleves::with(['classe', 'parents', 'transports', 'notes', 'factures']) // Assurez-vous que ces relations sont définies dans le modèle Eleve
+             ->whereNull('archived_at')
+            //  ->orderBy('created_at', 'desc')
+             ->get();
 
-        $Eleves = DB::table('eleves')
-        ->join('classes', 'classes.id', '=', 'eleves.classe_id')
-        ->join('parents', 'parents.id', '=', 'eleves.parent_id')
-        ->join('transports_scolaires', 'transports_scolaires.id', '=', 'eleves.transports_scolaire_id')
-        // ->join('dossiers_medicauxes', 'dossiers_medicauxes.id', '=', 'eleves.dossier_medicaux_id')
-        ->select('eleves.*',
-            'parents.id',
-            'parents.nomPar',
-            'parents.email',
-            'parents.telephone',
-            'classes.nomCl',
-            // 'dossiers_medicauxes.MoyenEleve',
-            // 'transports_scolaires.MotifEleve',
-        )
-        ->where('eleves.archived_at',null)
-        ->orderBy('eleves.created_at','desc')
-        ->get();
-        // ->paginate(10);
+         return response()->json($eleves);
+     }
 
-        return response()->json($Eleves);
-    }
-    
+
     public function store(Request $request)
     {
 
@@ -110,13 +95,13 @@ class EleveController extends Controller
         }
 
         $validatedData = $request->validate([
-           'name' => 'required|string|max:255',
-            'surname' => 'required|string|max:255',
-            'birthday' => 'required|date|before:today',
-            'classeId' => 'required|integer|exists:classes,id',
-            'medicalId' => 'nullable|integer|exists:dossiers_medicaux,id',
-            'parentId' => 'required|integer|exists:parents,id',
-            'transportId' => 'nullable|integer|exists:transports_scolaires,id',
+           'name' => 'sometimes|string|max:255',
+            'surname' => 'sometimes|string|max:255',
+            'birthday' => 'sometimes|date|before:today',
+            'classeId' => 'sometimes|integer|exists:classes,id',
+            'sexe' => 'sometimes|string',
+            'parentId' => 'sometimes|integer|exists:parents,id',
+            // 'transportId' => 'nullable|integer|exists:transports_scolaires,id',
         ]);
 
         $student->update($validatedData);
@@ -140,19 +125,23 @@ class EleveController extends Controller
      }
 
 
- public function archiveEleve(string $id)
+    public function archive(string $id)
 
-     {
+    {
 
 
         $Eleve = Eleves::find($id);
         $Eleve ->update([
              'archived_at'=>now()
-         ]);
+        ]);
 
-         return response()->json(['message'=>now()]);
+        return response()->json(['message'=>now()]);
 
-     }
+    }
+
+
+
+
 
      public function AfficherLesElevesArchivés (){
          $Eleve = DB::table('Eleves')

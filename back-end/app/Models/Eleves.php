@@ -11,7 +11,7 @@ class Eleves extends Model
     use HasFactory;
 
     protected $fillable = [
-        'nomEl', 'prenomEl', 'sexe', 'archived_at', 'date_naissance', 'classe_id', 'parent_id','transport_scolaire_id',
+        'nomEl', 'prenomEl', 'sexe', 'archived_at', 'date_naissance', 'classe_id', 'parent_id','transport_scolaire_id','archived_at'
         // 'password'
     ];
 
@@ -20,10 +20,7 @@ class Eleves extends Model
         return $this->belongsTo(Classes::class, 'classe_id');
     }
 
-    public function dossierMedical()
-    {
-        return $this->belongsTo(Dossiers_Medicaux::class, 'dossier_medicaux_id');
-    }
+
 
     public function parents()
     {
